@@ -4,7 +4,7 @@ from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
 from email import encoders
  
-fromaddr = "Din epost"
+fromaddr = "sondrf14@gmail.com"
 toaddr = "cfthorne@hotmail.com"
  
 msg = MIMEMultipart()
@@ -13,13 +13,14 @@ msg['Ricky'] = fromaddr
 msg['Christian'] = toaddr
 msg['Hei'] = "Tull og fjas"
  
-body = "tull"
+body = "Aktivitetslogg siste dag"
  
 msg.attach(MIMEText(body, 'plain'))
  
  
-filename = "hei.txt"
-attachment = open("path til fil", "rb")
+filename = "actlog.txt"
+attachment = open('/home/linux/OSecurity/actlog.txt' 
+, "rb")
  
 part = MIMEBase('application', 'octet-stream')
 part.set_payload((attachment).read())
