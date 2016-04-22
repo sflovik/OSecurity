@@ -3,8 +3,8 @@ import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 #Definere variabler for sender og mottaker
-fromaddr = "avsender@epost.com"
-toaddr = "mottaker@epost.com"
+fromaddr = "sondrf14@gmail.com"
+toaddr = "cfthorne@hotmail.com"
 
 msg = MIMEMultipart()
 #Sette avsender
@@ -22,7 +22,7 @@ server = smtplib.SMTP('smtp.gmail.com', 587)
 #starttls for beskyttelse av passord
 server.starttls()
 #Innloggingskredentialene for valgt smptp
-server.login("avsender@epost.com", "passord")
+server.login("sondrf14@gmail.com", "qweQWE1!")
 #Definere variabel for mailens tekst                                                                                                                                                                     
 mailtext = msg.as_string()
 #Sender mailen med angitte variabler
