@@ -1,9 +1,14 @@
 import smtplib
+import RPi.GPIO as GPIO
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
 from email import encoders
 import time
+
+GPIO.setmode(GPIO.BCM)
+PIR_PIN = 7
+GPIO.setup(PIR_PIN, GPIO.IN)
 
 def writelog():
 	localtime = time.asctime (time.localtime(time.time()))
@@ -32,7 +37,7 @@ def sendmail():
 	#starttls for beskyttelse av passord
 	server.starttls()
 	#Innloggingskredentialene for valgt smptp
-	server.login("sondrf14@gmail.com", "PASSORD")
+	server.login("sondrf14@gmail.com", "PASSWORD")
 	#Definere variabel for mailens tekst                                                                                                                                                                     
 	mailtext = msg.as_string()
 	#Sender mailen med angitte variabler
@@ -48,15 +53,15 @@ def mailactlog():
  
 	msg['From'] = fromaddr
 	msg['To'] = toaddr
-	msg['Subject'] = "Aktivitetslogg"
+	msg['Subject'] = "OSecurity - Activity log"
  
-	body = "Aktivitetslogg siste dag"
+	body = "OSecurity is disarmed, activity log since arming is attached"
  
 	msg.attach(MIMEText(body, 'plain'))
  
  
 	filename = "actlog.txt"
-	attachment = open('/home/linux/OSecurity/actlog.txt' 
+	attachment = open('/home/pi/Desktop/actlog.txt' 
 	, "rb")
  
 	part = MIMEBase('application', 'octet-stream')
@@ -68,10 +73,25 @@ def mailactlog():
  
 	server = smtplib.SMTP('smtp.gmail.com', 587)
 	server.starttls()
-	server.login(fromaddr, "PASSORD")
+	server.login(fromaddr, "PASSWORD")
 	text = msg.as_string()
 	server.sendmail(fromaddr, toaddr, text)
 	server.quit()
-writelog()
-sendmail()
-mailactlog()
+def MOTION (PIR_PIN):
+        print "Motion Detected!Sending e-mail notification to registered address"
+        writelog()
+        sendmail()
+        
+print "PIR Module Test (CTRL+C to exit)"
+time.sleep(2)
+print "ready"
+try:
+    GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
+    while 1:
+        time.sleep(10)
+
+except KeyboardInterrupt:
+    print " Quit"
+    print "Disarming OSecurity - sending activity log to registered email"
+    GPIO.cleanup()
+    mailactlog()
