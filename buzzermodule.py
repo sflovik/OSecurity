@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-BeepPin = 32
+BeepPin = 18
 
 def setup():
 	GPIO.setmode(GPIO.BOARD) 
@@ -11,9 +11,9 @@ def setup():
 def loop():
 	while True:
 		GPIO.output(BeepPin, GPIO.LOW)
-		time.sleep(1)
+		time.sleep(0.5)
 		GPIO.output(BeepPin, GPIO.HIGH)
-		time.sleep(1)
+		time.sleep(0.5)
 
 def destroy():
 	GPIO.output(BeepPin, GPIO.HIGH) 
