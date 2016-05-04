@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-BeepPin = 11
+BeepPin = 32
 
 def setup():
 	GPIO.setmode(GPIO.BOARD) 
