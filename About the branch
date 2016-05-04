@@ -2,5 +2,5 @@
 Main branch for all development
 
 =======
-Main branch for all python development
+Main branch for all python development. Pin setup @raspberry - 5V pin 2, ground pin 6, GPIO pin 26
 >>>>>>> python
