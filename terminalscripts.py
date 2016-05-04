@@ -101,4 +101,4 @@ except KeyboardInterrupt:
     print "Disarming OSecurity - sending activity log to registered email"
     GPIO.cleanup()
     mailactlog()
-	
+	os.kill("python buzzermodule.py")
