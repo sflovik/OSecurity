@@ -83,7 +83,7 @@ def MOTION (PIR_PIN):
         print "Motion Detected!Sending e-mail notification to registered address"
         writelog()
         sendmail()
-        os.system("buzzermodule.py")
+        exexfile("buzzermodule.py")
 
 
         
