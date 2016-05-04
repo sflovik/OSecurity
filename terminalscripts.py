@@ -22,12 +22,12 @@ def loop():
 		GPIO.output(BeepPin, GPIO.HIGH)
 		time.sleep(0.5)
 
-def destroy():
-	GPIO.output(BeepPin, GPIO.HIGH) 
-	GPIO.cleanup() 
+# def destroy():
+	#GPIO.output(BeepPin, GPIO.HIGH) 
+	#GPIO.cleanup() 
 
-	if __name__ == '__main__': 
-		print 'Press Ctrl+C to exit'
+	#if __name__ == '__main__': 
+	#	print 'Press Ctrl+C to exit'
 setup()
 
 
@@ -119,4 +119,4 @@ except KeyboardInterrupt:
     print "Disarming OSecurity - sending activity log to registered email"
     GPIO.cleanup()
     mailactlog()
-	destroy()
+	
