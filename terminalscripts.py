@@ -6,6 +6,7 @@ from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
 from email import encoders
 import time
+import subprocess as sp
 
 GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
@@ -84,7 +85,8 @@ def MOTION (PIR_PIN):
         print "Motion Detected!Sending e-mail notification to registered address"
         writelog()
         sendmail()
-        os.system("python buzzermodule.py")
+        extProc = sp.Popen(['python','buzzermodule.py']) # runs myPyScript.py 
+		status = sp.Popen.poll(extProc) # status should be 'None'
 
 
         
@@ -101,5 +103,5 @@ except KeyboardInterrupt:
     print "Disarming OSecurity - sending activity log to registered email"
     GPIO.cleanup()
     mailactlog()
-    killall python
-	
+	sp.Popen.terminate(extProc) # closes the process
+	status = sp.Popen.poll(extProc) # status should now be something other than 'None' ('1' in my testing)
