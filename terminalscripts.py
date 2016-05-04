@@ -83,13 +83,12 @@ def mailactlog():
 	server.quit()
 def MOTION (PIR_PIN):
         print "Motion Detected!Sending e-mail notification to registered address"
-        writelog()
-        sendmail()
         extProc = sp.Popen(['python','buzzermodule.py']) # runs myPyScript.py 
 		status = sp.Popen.poll(extProc) # status should be 'None'
-
-
+        writelog()
+        sendmail()
         
+       
 print "PIR Module Test (CTRL+C to exit)"
 time.sleep(2)
 print "ready"
