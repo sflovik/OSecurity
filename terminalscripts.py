@@ -1,4 +1,5 @@
 import smtplib
+import os
 import RPi.GPIO as GPIO
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
@@ -83,7 +84,7 @@ def MOTION (PIR_PIN):
         print "Motion Detected!Sending e-mail notification to registered address"
         writelog()
         sendmail()
-        exexfile("buzzermodule.py")
+        os.system("buzzermodule.py")
 
 
         
