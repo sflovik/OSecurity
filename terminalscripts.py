@@ -9,6 +9,27 @@ import time
 GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
+BeepPin = 18
+def setup():
+	GPIO.setmode(GPIO.BOARD) 
+	GPIO.setup(BeepPin, GPIO.OUT)
+	GPIO.output(BeepPin, GPIO.HIGH)
+
+def loop():
+	while True:
+		GPIO.output(BeepPin, GPIO.LOW)
+		time.sleep(0.5)
+		GPIO.output(BeepPin, GPIO.HIGH)
+		time.sleep(0.5)
+
+def destroy():
+	GPIO.output(BeepPin, GPIO.HIGH) 
+	GPIO.cleanup() 
+
+	if __name__ == '__main__': 
+		print 'Press Ctrl+C to exit'
+setup()
+
 
 def writelog():
 	localtime = time.asctime (time.localtime(time.time()))
@@ -81,6 +102,9 @@ def MOTION (PIR_PIN):
         print "Motion Detected!Sending e-mail notification to registered address"
         writelog()
         sendmail()
+        loop()
+
+
         
 print "PIR Module Test (CTRL+C to exit)"
 time.sleep(2)
@@ -95,3 +119,4 @@ except KeyboardInterrupt:
     print "Disarming OSecurity - sending activity log to registered email"
     GPIO.cleanup()
     mailactlog()
+	destroy()
