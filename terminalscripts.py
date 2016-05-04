@@ -12,7 +12,13 @@ GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
 
+def spStart():
+	extProc = sp.Popen(['python','buzzermodule.py']) # runs myPyScript.py 
+	status = sp.Popen.poll(extProc) # status should be 'None'       
 
+def spStop():
+	sp.Popen.terminate(extProc) # closes the process
+	status = sp.Popen.poll(extProc) # status should now be something other than 'None' ('1' in my testing)
 
 def writelog():
 	localtime = time.asctime (time.localtime(time.time()))
@@ -83,11 +89,12 @@ def mailactlog():
 	server.quit()
 def MOTION (PIR_PIN):
     print "Motion Detected!Sending e-mail notification to registered address"
-    extProc = sp.Popen(['python','buzzermodule.py']) # runs myPyScript.py 
     writelog()
     sendmail()
-        
-       
+    spStart()
+
+
+
 print "PIR Module Test (CTRL+C to exit)"
 time.sleep(2)
 print "ready"
@@ -99,7 +106,6 @@ try:
 except KeyboardInterrupt:
     print " Quit"
     print "Disarming OSecurity - sending activity log to registered email"
+    spStop()
     GPIO.cleanup()
     mailactlog()
-	sp.Popen.terminate(extProc) # closes the process
-	status = sp.Popen.poll(extProc) # status should now be something other than 'None' ('1' in my testing)
