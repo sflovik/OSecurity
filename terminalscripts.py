@@ -17,9 +17,9 @@ def spStart():
 	status = sp.Popen.poll(extProc) # status none  
 	extProc = extProc  
 
-def spStop():
-	sp.Popen.terminate(buzzer) # lukker subprocess
-	status = sp.Popen.poll(buzzer) # status not none
+#def spStop(): For å eventuelt stoppe buzzer uten å disarmere alarm - utvidelsespotensial
+	#sp.Popen.terminate(buzzer) # lukker subprocess
+	#status = sp.Popen.poll(buzzer) # status not none
 
 def writelog():
 	localtime = time.asctime (time.localtime(time.time()))
@@ -107,6 +107,6 @@ try:
 except KeyboardInterrupt:
     print " Quit"
     print "Disarming OSecurity - sending activity log to registered email"
-    spStop()
+    #spStop()
     GPIO.cleanup()
     mailactlog()
