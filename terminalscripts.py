@@ -11,11 +11,11 @@ import subprocess as sp
 GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
-buzzer = ""
+extProc = ""
 def spStart():
 	extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
 	status = sp.Popen.poll(extProc) # status none  
-	buzzer = extProc  
+	extProc = extProc  
 
 def spStop():
 	sp.Popen.terminate(buzzer) # lukker subprocess
