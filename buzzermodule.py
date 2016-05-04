@@ -20,7 +20,7 @@ def destroy():
 	GPIO.cleanup() 
 
 	if __name__ == '__main__': 
-		print 'Press Ctrl+C again to stop the buzzer'
+		print 'Buzzer has been deactivated'
 setup()
 try:
 	loop()

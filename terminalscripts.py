@@ -11,14 +11,15 @@ import subprocess as sp
 GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
-
+buzzer = ""
 def spStart():
-	extProc = sp.Popen(['python','buzzermodule.py']) # runs myPyScript.py 
-	status = sp.Popen.poll(extProc) # status should be 'None'       
+	extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
+	status = sp.Popen.poll(extProc) # status none  
+	buzzer = extProc  
 
 def spStop():
-	sp.Popen.terminate(extProc) # closes the process
-	status = sp.Popen.poll(extProc) # status should now be something other than 'None' ('1' in my testing)
+	sp.Popen.terminate(buzzer) # lukker subprocess
+	status = sp.Popen.poll(buzzer) # status not none
 
 def writelog():
 	localtime = time.asctime (time.localtime(time.time()))
