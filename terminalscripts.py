@@ -17,7 +17,7 @@ def spStart():
 	status = sp.Popen.poll(extProc) # status none  
 	extProc = extProc  
 
-#def spStop(): For å eventuelt stoppe buzzer uten å disarmere alarm - utvidelsespotensial
+#def spStop(): Eventuelt stoppe buzzer uten disarmering av alarm - utvidelsespotensial
 	#sp.Popen.terminate(buzzer) # lukker subprocess
 	#status = sp.Popen.poll(buzzer) # status not none
 
