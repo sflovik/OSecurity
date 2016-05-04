@@ -39,7 +39,7 @@ def sendmail():
 	#starttls for beskyttelse av passord
 	server.starttls()
 	#Innloggingskredentialene for valgt smptp
-	server.login("sondrf14@gmail.com", "PASSWORD")
+	server.login("sondrf14@gmail.com", "rtyRTY1!")
 	#Definere variabel for mailens tekst                                                                                                                                                                     
 	mailtext = msg.as_string()
 	#Sender mailen med angitte variabler
@@ -75,7 +75,7 @@ def mailactlog():
  
 	server = smtplib.SMTP('smtp.gmail.com', 587)
 	server.starttls()
-	server.login(fromaddr, "PASSWORD")
+	server.login(fromaddr, "rtyRTY1!")
 	text = msg.as_string()
 	server.sendmail(fromaddr, toaddr, text)
 	server.quit()
