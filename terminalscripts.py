@@ -22,6 +22,7 @@ def startupInput():
 		time.sleep(2)
 		print "Armed with active buzzer"
 		muted = False
+		muted = muted
 		systemActive()
 
 	elif mute == "n":
@@ -30,6 +31,7 @@ def startupInput():
 		time.sleep(2)
 		print "Armed with muted buzzer"
 		muted = True
+		muted = muted
 		systemActive()
 	else:
 		print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
