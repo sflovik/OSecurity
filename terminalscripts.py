@@ -11,7 +11,7 @@ import subprocess as sp
 GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
-muted = False 
+muted = True 
 
 def spStart():
 	extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
@@ -109,9 +109,7 @@ try:
     while 1:
         time.sleep(10)
 
-except KeyboardInterrupt:
-	print "Stopper buzzer"
-	muted = True
+
 
 # except KeyboardInterrupt:
 #   print " Quit"
