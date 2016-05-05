@@ -123,7 +123,7 @@ def MOTION (PIR_PIN):
 
 startupInput()
 
-while start:
+if start:
 	GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
 
 
