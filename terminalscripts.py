@@ -15,11 +15,11 @@ extProc = ""
 def spStart():
 	extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
 	status = sp.Popen.poll(extProc) # status none  
-	extProc = extProc  
+	def spStop(): #Eventuelt stoppe buzzer uten disarmering av alarm - utvidelsespotensial
+		sp.Popen.terminate(extProc) # lukker subprocess
+		status = sp.Popen.poll(extProc) # status not none
 
-def spStop(): #Eventuelt stoppe buzzer uten disarmering av alarm - utvidelsespotensial
-	sp.Popen.terminate(extProc) # lukker subprocess
-	status = sp.Popen.poll(extProc) # status not none
+
 
 def writelog():
 	localtime = time.asctime (time.localtime(time.time()))
