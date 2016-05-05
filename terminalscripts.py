@@ -109,13 +109,13 @@ try:
     while 1:
         time.sleep(10)
 
-#except KeyboardInterrupt:
-#	print "Tester, terminerer subprocess..."
-#	spStop()
-
 except KeyboardInterrupt:
-    print " Quit"
-    print "Disarming OSecurity - sending activity log to registered email"
+	print "Stopper buzzer"
+	muted = True:
+
+# except KeyboardInterrupt:
+#   print " Quit"
+#    print "Disarming OSecurity - sending activity log to registered email"
     #spStop()
-    GPIO.cleanup()
-    mailactlog()
+#    GPIO.cleanup()
+#    mailactlog()
