@@ -105,8 +105,12 @@ try:
         time.sleep(10)
 
 except KeyboardInterrupt:
-    print " Quit"
-    print "Disarming OSecurity - sending activity log to registered email"
+	print "Prøver å terminere subprocess..."
+	spStop()
+
+#except KeyboardInterrupt:
+ #   print " Quit"
+  #  print "Disarming OSecurity - sending activity log to registered email"
     #spStop()
-    GPIO.cleanup()
-    mailactlog()
+   # GPIO.cleanup()
+   # mailactlog()
