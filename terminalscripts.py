@@ -11,7 +11,16 @@ import subprocess as sp
 GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
-muted = True 
+muted = False 
+def startupInput():
+	print "Hi! Please set wether the buzzer should be active for this session! Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
+	mute = input ("")
+	if input == "y":
+		muted = False
+	else if input == "n":
+		muted = True
+	else:
+		print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
 
 def spStart():
 	extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
@@ -116,3 +125,4 @@ except KeyboardInterrupt:
    	print "Disarming OSecurity - sending activity log to registered email"
    	GPIO.cleanup()
 	mailactlog()
+startupInput()
