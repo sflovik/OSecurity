@@ -120,22 +120,21 @@ def systemActive():
 
 
 print "Hi! Would you like the buzzer to be active for this session? y/n"
-	mute = raw_input ("")
-	if mute == "y":
-		
-		print "PIR Module (CTRL+C to exit)"
-		time.sleep(2)
-		print "Armed with active buzzer"
-		muted = False
-		systemActive()
+mute = raw_input ("")
+if mute == "y":
+	print "PIR Module (CTRL+C to exit)"
+	time.sleep(2)
+	print "Armed with active buzzer"
+	muted = False
+	systemActive()
 
-	elif mute == "n":
+elif mute == "n":
 		
-		print "PIR Module (CTRL+C to exit)"
-		time.sleep(2)
-		print "Armed with muted buzzer"
-		muted = True
-		systemActive()
-	else:
-		print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
-		KeyboardInterrupt
+	print "PIR Module (CTRL+C to exit)"
+	time.sleep(2)
+	print "Armed with muted buzzer"
+	muted = True
+	systemActive()
+else:
+	print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
+	KeyboardInterrupt
