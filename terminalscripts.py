@@ -17,7 +17,7 @@ def startupInput():
 	mute = input ("")
 	if input == "y":
 		muted = False
-	else if input == "n":
+	elif input == "n":
 		muted = True
 	else:
 		print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
