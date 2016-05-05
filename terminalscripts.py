@@ -22,12 +22,14 @@ def startupInput():
 		time.sleep(2)
 		print "Armed with active buzzer"
 		start = True
+		systemActive()
 	elif mute == "n":
 		muted = True
 		print "PIR Module (CTRL+C to exit)"
 		time.sleep(2)
 		print "Armed with muted buzzer"
 		start = True
+		systemActive()
 	else:
 		print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
 		start = False
@@ -122,12 +124,12 @@ def MOTION (PIR_PIN):
 
 
 startupInput()
-
-try:
-	if start:
-    		GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
-    	while 1:
-        	time.sleep(10)
+def systemActive():
+	try:
+		if start:
+    			GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
+    		while 1:
+        		time.sleep(10)
 
 
 
