@@ -13,30 +13,8 @@ PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
 muted = ""
 
-def startupInput():
-	print "Hi! Would you like the buzzer to be active for this session? y/n"
-	mute = raw_input ("")
-	if mute == "y":
-		
-		print "PIR Module (CTRL+C to exit)"
-		time.sleep(2)
-		print "Armed with active buzzer"
-		muted = False
-		muted = muted
-		systemActive()
 
-	elif mute == "n":
-		
-		print "PIR Module (CTRL+C to exit)"
-		time.sleep(2)
-		print "Armed with muted buzzer"
-		muted = True
-		muted = muted
-		systemActive()
-	else:
-		print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
-		KeyboardInterrupt
-
+	
 
 def spStart():
 	if muted:
@@ -141,4 +119,23 @@ def systemActive():
 		mailactlog()
 
 
-startupInput()
+print "Hi! Would you like the buzzer to be active for this session? y/n"
+	mute = raw_input ("")
+	if mute == "y":
+		
+		print "PIR Module (CTRL+C to exit)"
+		time.sleep(2)
+		print "Armed with active buzzer"
+		muted = False
+		systemActive()
+
+	elif mute == "n":
+		
+		print "PIR Module (CTRL+C to exit)"
+		time.sleep(2)
+		print "Armed with muted buzzer"
+		muted = True
+		systemActive()
+	else:
+		print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
+		KeyboardInterrupt
