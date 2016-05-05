@@ -125,7 +125,7 @@ startupInput()
 
 try:
 	if start:
-    	GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
+    		GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
     	while 1:
         	time.sleep(10)
 
