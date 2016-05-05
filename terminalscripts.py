@@ -121,12 +121,12 @@ def MOTION (PIR_PIN):
     writelog()
     sendmail()
     spStart()
+    
 def systemActive():
 	try:
-		if start:
-    			GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
-    		while 1:
-        		time.sleep(10)
+		GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
+    	while 1:
+        time.sleep(10)
 
 	except KeyboardInterrupt:
    		print " Quit"
