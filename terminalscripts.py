@@ -18,8 +18,7 @@ def spStart():
 	def spStop(): #Eventuelt stoppe buzzer uten disarmering av alarm - utvidelsespotensial
 		sp.Popen.terminate(extProc) # lukker subprocess
 		status = sp.Popen.poll(extProc) # status not none
-
-
+	return stStop()
 
 def writelog():
 	localtime = time.asctime (time.localtime(time.time()))
