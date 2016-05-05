@@ -12,6 +12,7 @@ GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
 muted = False 
+start = False
 def startupInput():
 	print "Hi! Would you like the buzzer to be active for this session? y/n"
 	mute = raw_input ("")
@@ -20,14 +21,18 @@ def startupInput():
 		print "PIR Module (CTRL+C to exit)"
 		time.sleep(2)
 		print "Armed with active buzzer"
+		start = True
 	elif mute == "n":
 		muted = True
 		print "PIR Module (CTRL+C to exit)"
 		time.sleep(2)
 		print "Armed with muted buzzer"
+		start = True
 	else:
 		print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
+		start = False
 		KeyboardInterrupt
+
 
 def spStart():
 	extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
@@ -118,10 +123,11 @@ def MOTION (PIR_PIN):
 
 startupInput()
 
-try:
-    GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
-    while 1:
-        time.sleep(10)
+if start:
+	try:
+    	GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
+    	while 1:
+        	time.sleep(10)
 
 
 
