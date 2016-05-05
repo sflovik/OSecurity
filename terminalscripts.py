@@ -114,6 +114,5 @@ try:
 except KeyboardInterrupt:
    	print " Quit"
    	print "Disarming OSecurity - sending activity log to registered email"
-   	spStop()
    	GPIO.cleanup()
 	mailactlog()
