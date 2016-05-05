@@ -37,11 +37,14 @@ def startupInput():
 
 
 def spStart():
-	extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
-	status = sp.Popen.poll(extProc) # status none  
 	if muted:
-		sp.Popen.terminate(extProc) # lukker subprocess
-		status = sp.Popen.poll(extProc) # status not none
+		print "no buzzer active"
+	else:
+		extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
+		status = sp.Popen.poll(extProc) # status none  
+	#if muted:
+	#	sp.Popen.terminate(extProc) # lukker subprocess
+	#	status = sp.Popen.poll(extProc) # status not none
 
 
 #def spStop(): #Eventuelt stoppe buzzer uten disarmering av alarm - utvidelsespotensial
