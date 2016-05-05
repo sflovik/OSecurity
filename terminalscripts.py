@@ -111,7 +111,7 @@ try:
 
 except KeyboardInterrupt:
 	print "Stopper buzzer"
-	muted = True:
+	muted = True
 
 # except KeyboardInterrupt:
 #   print " Quit"
