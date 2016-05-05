@@ -121,9 +121,6 @@ def MOTION (PIR_PIN):
     writelog()
     sendmail()
     spStart()
-
-
-startupInput()
 def systemActive():
 	try:
 		if start:
@@ -136,3 +133,6 @@ def systemActive():
    		print "Disarming OSecurity - sending activity log to registered email"
    		GPIO.cleanup()
 		mailactlog()
+
+
+startupInput()
