@@ -18,10 +18,11 @@ muted = ""
 
 def spStart():
 	if muted:
-		print "no buzzer active"
+		print "The buzzer is inactive/muted in this session"
 	else:
 		extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
-		status = sp.Popen.poll(extProc) # status none  
+		status = sp.Popen.poll(extProc) # status none 
+		print "Buzzer has been activated!" 
 	#if muted:
 	#	sp.Popen.terminate(extProc) # lukker subprocess
 	#	status = sp.Popen.poll(extProc) # status not none
@@ -100,14 +101,13 @@ def mailactlog():
 	server.sendmail(fromaddr, toaddr, text)
 	server.quit()
 def MOTION (PIR_PIN):
-    print muted
+    print "Motion detected by PIR. E-mail notification sent"
     writelog()
     sendmail()
     spStart()
 
 def systemActive():
 	try:
-		print muted
 		GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
     		while 1:
         			time.sleep(10)
