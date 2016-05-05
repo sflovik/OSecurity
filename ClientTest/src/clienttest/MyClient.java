@@ -4,7 +4,7 @@
     public static void main(String[] args) {  
 
     try{      
-    Socket soc=new Socket("localhost", 2004);  
+    Socket soc=new Socket("192.168.137.131", 2004);  
     DataOutputStream dout=new DataOutputStream(soc.getOutputStream());  
     dout.writeUTF("Hello");
     dout.flush();

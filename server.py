@@ -1,6 +1,6 @@
 import socket              
 soc = socket.socket()        
-host = "localhost"
+host = "192.168.137.131"
 port = 2004               
 soc.bind((host, port))       
 soc.listen(5)               
