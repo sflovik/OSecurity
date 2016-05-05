@@ -105,7 +105,7 @@ try:
         time.sleep(10)
 
 except KeyboardInterrupt:
-	print "Prøver å terminere subprocess..."
+	print "Tester, terminerer subprocess..."
 	spStop()
 
 #except KeyboardInterrupt:
