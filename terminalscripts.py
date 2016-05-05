@@ -11,14 +11,20 @@ import subprocess as sp
 GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
+bool muted = false
 
 def spStart():
 	extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
 	status = sp.Popen.poll(extProc) # status none  
-	def spStop(): #Eventuelt stoppe buzzer uten disarmering av alarm - utvidelsespotensial
+	if muted 
 		sp.Popen.terminate(extProc) # lukker subprocess
 		status = sp.Popen.poll(extProc) # status not none
-	return spStop()
+
+
+#def spStop(): #Eventuelt stoppe buzzer uten disarmering av alarm - utvidelsespotensial
+#	sp.Popen.terminate(extProc) # lukker subprocess
+#	status = sp.Popen.poll(extProc) # status not none
+
 
 def writelog():
 	localtime = time.asctime (time.localtime(time.time()))
@@ -103,13 +109,13 @@ try:
     while 1:
         time.sleep(10)
 
-except KeyboardInterrupt:
-	print "Tester, terminerer subprocess..."
-	spStop()
-
 #except KeyboardInterrupt:
- #   print " Quit"
-  #  print "Disarming OSecurity - sending activity log to registered email"
+#	print "Tester, terminerer subprocess..."
+#	spStop()
+
+except KeyboardInterrupt:
+    print " Quit"
+    print "Disarming OSecurity - sending activity log to registered email"
     #spStop()
-   # GPIO.cleanup()
-   # mailactlog()
+    GPIO.cleanup()
+    mailactlog()
