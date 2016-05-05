@@ -12,23 +12,23 @@ GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
 muted = False 
-start = False
+
 def startupInput():
 	print "Hi! Would you like the buzzer to be active for this session? y/n"
 	mute = raw_input ("")
 	if mute == "y":
-		muted = False
+		
 		print "PIR Module (CTRL+C to exit)"
 		time.sleep(2)
 		print "Armed with active buzzer"
-		start = True
+		muted = False
 		systemActive()
 	elif mute == "n":
-		muted = True
+		
 		print "PIR Module (CTRL+C to exit)"
 		time.sleep(2)
 		print "Armed with muted buzzer"
-		start = True
+		muted = True
 		systemActive()
 	else:
 		print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
