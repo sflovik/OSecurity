@@ -131,10 +131,8 @@ def systemActive():
     		while 1:
         		time.sleep(10)
 
-
-
-except KeyboardInterrupt:
-   	print " Quit"
-   	print "Disarming OSecurity - sending activity log to registered email"
-   	GPIO.cleanup()
-	mailactlog()
+	except KeyboardInterrupt:
+   		print " Quit"
+   		print "Disarming OSecurity - sending activity log to registered email"
+   		GPIO.cleanup()
+		mailactlog()
