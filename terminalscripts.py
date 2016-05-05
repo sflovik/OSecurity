@@ -33,7 +33,6 @@ def startupInput():
 		systemActive()
 	else:
 		print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
-		start = False
 		KeyboardInterrupt
 
 
@@ -121,13 +120,14 @@ def mailactlog():
 	server.sendmail(fromaddr, toaddr, text)
 	server.quit()
 def MOTION (PIR_PIN):
-    print "Motion Detected!Sending e-mail notification to registered address"
+    print muted
     writelog()
     sendmail()
     spStart()
 
 def systemActive():
 	try:
+		print muted
 		GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
     		while 1:
         			time.sleep(10)
