@@ -20,7 +20,7 @@ def spStart():
 	if muted:
 		print "The buzzer is inactive/muted in this session"
 	else:
-		extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
+		extProc = sp.Popen(['python','/home/pi/OSecurity/buzzermodule.py']) # Starter subprocess for buzzermodul
 		status = sp.Popen.poll(extProc) # status none 
 		print "Buzzer has been activated!" 
 	#if muted:
