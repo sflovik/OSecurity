@@ -11,15 +11,27 @@ import subprocess as sp
 GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
-extProc = ""
-def spStart():
-	extProc = sp.Popen(['python','buzzermodule.py']) # Starter subprocess for buzzermodul
-	status = sp.Popen.poll(extProc) # status none  
-	extProc = extProc  
+muted = ""
 
-#def spStop(): Eventuelt stoppe buzzer uten disarmering av alarm - utvidelsespotensial
-	#sp.Popen.terminate(buzzer) # lukker subprocess
-	#status = sp.Popen.poll(buzzer) # status not none
+
+	
+
+def spStart():
+	if muted:
+		print "The buzzer is inactive/muted in this session"
+	else:
+		extProc = sp.Popen(['python','/home/pi/OSecurity/buzzermodule.py']) # Starter subprocess for buzzermodul
+		status = sp.Popen.poll(extProc) # status none 
+		print "Buzzer has been activated!" 
+	#if muted:
+	#	sp.Popen.terminate(extProc) # lukker subprocess
+	#	status = sp.Popen.poll(extProc) # status not none
+
+
+#def spStop(): #Eventuelt stoppe buzzer uten disarmering av alarm - utvidelsespotensial
+#	sp.Popen.terminate(extProc) # lukker subprocess
+#	status = sp.Popen.poll(extProc) # status not none
+
 
 def writelog():
 	localtime = time.asctime (time.localtime(time.time()))
@@ -29,7 +41,7 @@ def writelog():
 
 def sendmail():
 	#Definere variabler for sender og mottaker
-	fromaddr = "sondrf14@gmail.com"
+	fromaddr = "terminalnotificationstation@gmail.com"
 	toaddr = "cfthorne@hotmail.com"
 
 	msg = MIMEMultipart()
@@ -48,7 +60,7 @@ def sendmail():
 	#starttls for beskyttelse av passord
 	server.starttls()
 	#Innloggingskredentialene for valgt smptp
-	server.login("sondrf14@gmail.com", "rtyRTY1!")
+	server.login(fromaddr, "qweQWE1!")
 	#Definere variabel for mailens tekst                                                                                                                                                                     
 	mailtext = msg.as_string()
 	#Sender mailen med angitte variabler
@@ -57,7 +69,7 @@ def sendmail():
 	server.quit()   
 
 def mailactlog():
-	fromaddr = "sondrf14@gmail.com"
+	fromaddr = "terminalnotificationstation@gmail.com"
 	toaddr = "cfthorne@hotmail.com"
  
 	msg = MIMEMultipart()
@@ -84,29 +96,45 @@ def mailactlog():
  
 	server = smtplib.SMTP('smtp.gmail.com', 587)
 	server.starttls()
-	server.login(fromaddr, "rtyRTY1!")
+	server.login(fromaddr, "qweQWE1!")
 	text = msg.as_string()
 	server.sendmail(fromaddr, toaddr, text)
 	server.quit()
 def MOTION (PIR_PIN):
-    print "Motion Detected!Sending e-mail notification to registered address"
+    print "Motion detected by PIR. E-mail notification sent"
     writelog()
     sendmail()
     spStart()
 
+def systemActive():
+	try:
+		GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
+    		while 1:
+        			time.sleep(10)
+
+	except KeyboardInterrupt:
+   		print " Quit"
+   		print "Disarming OSecurity - sending activity log to registered email"
+   		GPIO.cleanup()
+		mailactlog()
 
 
-print "PIR Module Test (CTRL+C to exit)"
-time.sleep(2)
-print "ready"
-try:
-    GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
-    while 1:
-        time.sleep(10)
+print "Hi! Would you like the buzzer to be active for this session? y/n"
+mute = raw_input ("")
+if mute == "y":
+	print "PIR Module (CTRL+C to exit)"
+	time.sleep(2)
+	print "Armed with active buzzer"
+	muted = False
+	systemActive()
 
-except KeyboardInterrupt:
-    print " Quit"
-    print "Disarming OSecurity - sending activity log to registered email"
-    #spStop()
-    GPIO.cleanup()
-    mailactlog()
+elif mute == "n":
+		
+	print "PIR Module (CTRL+C to exit)"
+	time.sleep(2)
+	print "Armed with muted buzzer"
+	muted = True
+	systemActive()
+else:
+	print "Invalid input.  Please enter ""y"" for active buzzer or ""n"" for a muted buzzer"
+	KeyboardInterrupt
