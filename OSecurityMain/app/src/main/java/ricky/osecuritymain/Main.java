@@ -8,8 +8,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ToggleButton;
 
 public class Main extends AppCompatActivity {
+
+    ToggleButton toggle;
+    EditText ed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +25,7 @@ public class Main extends AppCompatActivity {
         getSupportActionBar().setTitle("  Home");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toggle = (ToggleButton)findViewById(R.id.toggBtn);
 
         getSupportActionBar().setIcon(R.drawable.home);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -53,4 +59,20 @@ public class Main extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-}
+
+
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            //toggle.toggle();
+            if ( ed.getText().toString().equalsIgnoreCase("1")) {
+
+                toggle.setTextOff("TOGGLE ON");
+                toggle.setChecked(true);
+            } else if ( ed.getText().toString().equalsIgnoreCase("0")) {
+
+                toggle.setTextOn("TOGGLE OFF");
+                toggle.setChecked(false);
+
+            }
+        }
+    }
