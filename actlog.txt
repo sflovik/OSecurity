@@ -1,0 +1,20 @@
+Wed May 11 22:36:03 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Wed May 11 22:36:09 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Wed May 11 22:36:15 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Fri May 13 17:37:29 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Fri May 13 17:37:34 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Fri May 13 17:39:25 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Fri May 13 17:42:25 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Fri May 13 17:42:30 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Fri May 13 17:42:43 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Fri May 13 17:43:20 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
