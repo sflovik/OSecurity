@@ -20,7 +20,7 @@ import java.io.*;
 import java.net.*;
 
 public class Main extends AppCompatActivity {
-    private static boolean mute = true;
+    private static boolean mute = false;
     int counter = 1;
     private static final String sendMute = "mute";
     private static final String sendActive = "active";
@@ -177,9 +177,16 @@ public class Main extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+        public void muteClick(View v) {
+            if (mute) {
+                mute = false;
+            }
+            else {
+                mute = true;
+            }
+        }
         public void onClick(View v) {
-        long millis = 4000;
+        long millis = 1500;
 
             if (counter == 1) {
                 setArming();
@@ -194,12 +201,7 @@ public class Main extends AppCompatActivity {
             else if (counter==2) {
                 setDisarming();
                 counter = 1;
-                try {
-                    Thread.sleep(millis); //
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-                setMute();
+
             }
 
 
