@@ -1,10 +1,16 @@
 package ricky.osecuritymain;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,16 +21,26 @@ import java.net.*;
 
 public class Main extends AppCompatActivity {
     private static boolean mute = true;
+    int counter = 1;
     private static final String sendMute = "mute";
     private static final String sendActive = "active";
     private static final String sendArming = "arming";
     private static final String sendDisarm = "disarming";
+  //  private static final int REQUEST_EXTERNAL_STORAGE = 1;
+  //  private static String[] PERMISSIONS_STORAGE = {
+    //        Manifest.permission.READ_EXTERNAL_STORAGE,
+      //      Manifest.permission.WRITE_EXTERNAL_STORAGE };
+
     ToggleButton toggle;
     EditText ed;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View view = new View(this);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -43,7 +59,18 @@ public class Main extends AppCompatActivity {
             }
         });
     }
+    /**
+    public static void verifyStoragePermissions(Activity activity) {
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE);
+        }
+    }
+     */
     public static void setArming() {
         try {
 
@@ -60,7 +87,7 @@ public class Main extends AppCompatActivity {
         } catch (UnknownHostException e) {
             System.err.println("Unknown Host.");
         } catch (IOException e) {
-            System.err.println("Couldn't get I/O for connection");
+            e.printStackTrace();
 
         }
     }
@@ -152,17 +179,33 @@ public class Main extends AppCompatActivity {
 
 
         public void onClick(View v) {
-            // TODO Auto-generated method stub
-            //toggle.toggle();
-            if ( ed.getText().toString().equalsIgnoreCase("1")) {
-                setArming();
-                toggle.setTextOff("TOGGLE ON");
-                toggle.setChecked(true);
-            } else if ( ed.getText().toString().equalsIgnoreCase("0")) {
-                setDisarming();
-                toggle.setTextOn("TOGGLE OFF");
-                toggle.setChecked(false);
+        long millis = 4000;
 
+            if (counter == 1) {
+                setArming();
+                counter++;
+                try {
+                    Thread.sleep(millis); //
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                setMute();
             }
+            else if (counter==2) {
+                setDisarming();
+                counter = 1;
+                try {
+                    Thread.sleep(millis); //
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                setMute();
+            }
+
+
+
+
+
         }
-    }
+}
+
