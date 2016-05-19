@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Mostly auto-generated code by android studio.
+The only real addition is the <uses-permission/> tags, to make sure that the application
+is allowed to connect to the network, and having read/write capabilities in its connection
+to emulator and terminal
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ricky.osecuritymain">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

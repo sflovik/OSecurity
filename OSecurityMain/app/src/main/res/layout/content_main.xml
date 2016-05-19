@@ -28,7 +28,12 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
+                <!--
+                    This button is the big "lock" on the application
+                    screen. On click it calls the "onClick" method
+                    in the Main java class, icon state changes on click
+                    from unlocked to locked, and back again
+                                   -->
                 <ToggleButton
                     android:id="@+id/toggBtn"
                     android:layout_width="200dp"
@@ -43,7 +48,14 @@
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
                     android:checked="false" />
-
+                <!--
+                    This button is the small buzzer symbol on the
+                    application screen. On click it calls the
+                    "muteClick" method in the Main java class.
+                    As the lock, it changes state on click,
+                    a line is drawn over the buzzer-icon when
+                    muted, and the line is removed when active
+                                   -->
                 <ToggleButton
                     android:layout_width="50dp"
                     android:layout_height="50dp"
