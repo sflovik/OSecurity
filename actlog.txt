@@ -134,3 +134,13 @@ Thu Nov  3 16:32:34 2016 , ble bevegelse oppdaget av PIR detektor og e-post noti
 
 Thu Nov  3 16:32:50 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
 
+Thu Nov  3 17:03:30 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Thu Nov  3 17:03:46 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Thu Nov  3 17:05:30 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Thu Nov  3 17:06:34 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Thu Nov  3 17:06:51 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
