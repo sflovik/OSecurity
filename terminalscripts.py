@@ -9,6 +9,7 @@ from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
 from email import encoders
 import time
+from time import sleep
 import subprocess as sp
 
 #Define the gpio for PIR
@@ -25,10 +26,16 @@ muted = ""
 def spStart():
 	if muted:
 		print "The buzzer is inactive/muted in this session"
+		extProc = sp.Popen(['python','/home/pi/OSecurity/camera.py'])
+		status = sp.Popen.poll(extProc)
+		
 	else:
 		extProc = sp.Popen(['python','/home/pi/OSecurity/buzzermodule.py'])
-		status = sp.Popen.poll(extProc) # status none 
-		print "Buzzer has been activated!" 
+		status = sp.Popen.poll(extProc) # status none
+		extProc2 = sp.Popen(['python','/home/pi/OSecurity/camera.py'])
+		status2 = sp.Popen.poll(extProc2) 
+		print "Buzzer has been activated!"
+		 
 
 #Function to log while system is active, called in the MOTION() function
 def writelog():
@@ -108,6 +115,7 @@ def MOTION (PIR_PIN):
     writelog()
     sendmail()
     spStart()
+    sleep(15)
 
 #Function systemActive() to be called on script startup, listens for gpio-input until KeyboardInterrupt occurs
 def systemActive():
