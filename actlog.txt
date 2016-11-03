@@ -18,3 +18,9 @@ Fri May 13 17:42:43 2016 , ble bevegelse oppdaget av PIR detektor og e-post noti
 
 Fri May 13 17:43:20 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
 
+Wed Jun  1 17:22:50 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Wed Jun  1 17:23:40 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
+Wed Jun  1 17:23:45 2016 , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt
+
