@@ -1,9 +1,11 @@
 import cv2
+import sys
+import os
 
 #user values
-imagePath = sys.argv[1]
-cascPath = sys.argv[2]
-
+imagePath = '/home/pi/OSecurity/testimage.jpg'
+cascPath = '/home/pi/OSecurity/haarcascade_frontalface_default.xml'
+facesFound = ""
 faceCascade = cv2.CascadeClassifier(cascPath)
 
 image = cv2.imread(imagePath)
@@ -20,4 +22,10 @@ print "Found {0} faces".format(len(faces))
 
 for (x, y, w, h) in faces:
 	cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+	facesFound = True
 
+cv2.imshow("Faces found" ,image)
+os.listdir(os.getcwd())
+if facesFound:
+        os.rename("testimage.jpg", "facefound.jpg")
+cv2.waitKey(0)

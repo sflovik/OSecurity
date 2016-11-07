@@ -1,3 +1,4 @@
+
 #Module for the terminalscript, to be activated on system arming
 #Imports for the module, smptp and email for sending email notification
 # GPIO for PIR-sensor 
@@ -7,6 +8,7 @@ import RPi.GPIO as GPIO
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
+from email.mime.image import MIMEImage
 from email import encoders
 import time
 from time import sleep
@@ -44,35 +46,7 @@ def writelog():
 	text_file.write("%s , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt" "\n" "\n" % localtime)
 	text_file.close()
 
-#Function to send e-mail notifications
-def sendmail():
-	#Define variables for sender and reciever
-	fromaddr = "terminalnotificationstation@gmail.com"
-	toaddr = "cfthorne@hotmail.com"
 
-	msg = MIMEMultipart()
-	#Set sender
-	msg['From'] = fromaddr
-	#Set reciever
-	msg['To'] = toaddr
-	#Set subject line
-	msg ['Subject'] = "Bevegelse oppdaget - alarm"
-	#Define variable for email text
-	body = "Bevegelsessensoren har oppdaget anomaliteter."
-	msg.attach(MIMEText(body, 'plain'))
-
-	#Set up connection and connect to smptp
-	server = smtplib.SMTP('smtp.gmail.com', 587)
-	#starttls to encrypt data such as password
-	server.starttls()
-	#Login credentials for sender (terminal), server.login(fromaddr, "password")
-	server.login(fromaddr, "qweQWE1!")
-	#Define variable for email text                                                                                                                                                                
-	mailtext = msg.as_string()
-	#Sends mail
-	server.sendmail(fromaddr, toaddr, mailtext)
-	#Terminates connection
-	server.quit()   
 
 #Function to mail an activity log, called on system disarm
 def mailactlog():
@@ -98,7 +72,9 @@ def mailactlog():
 	part.set_payload((attachment).read())
 	encoders.encode_base64(part)
 	part.add_header('Content-Disposition', "attachment; filename= %s" % filename)
- 
+ 	
+ 	
+
 	msg.attach(part)
  	# Same functionality as sendMail()'s smptp code
 	server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -113,7 +89,6 @@ def mailactlog():
 def MOTION (PIR_PIN):
     print "Motion detected by PIR. E-mail notification sent"
     writelog()
-    sendmail()
     spStart()
     sleep(15)
 
