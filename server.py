@@ -6,7 +6,7 @@ import os
 import time
 #Opens the socket connection
 soc = socket.socket()        
-host = "25.95.63.199"
+host = "25.49.110.247"
 port = 2004               
 soc.bind((host, port))       
 soc.listen(5)
