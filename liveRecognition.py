@@ -3,7 +3,7 @@ import sys
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 import time
-
+#Dette skriptet er nå implementert i camera.py, utdatert
 liveCamera = PiCamera()
 liveCamera.resolution = (360, 240)
 liveCamera.framerate = 15
@@ -12,10 +12,10 @@ rawCapture = PiRGBArray(camera, size=(360, 240))
 cascPath = sys.argv[1]
 faceCascade = cv2.CascadeClassifier(cascPath)
  
-# allow the camera to warmup
+# Sleep for å la kamera "varme opp" og starte
 time.sleep(0.1)
  
-# capture frames from the camera
+# Ta frames fra kamera i en loop
 for frame in liveCamera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 	
 	image = frame.array
@@ -31,12 +31,12 @@ for frame in liveCamera.capture_continuous(rawCapture, format="bgr", use_video_p
 	)
 	for (x, y, w, h) in faces:
         	cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
-	# show the frame
+	# Viser frame
 	cv2.imshow("Frame", image)
 	key = cv2.waitKey(1) & 0xFF
 	
  
-	# clear the stream in preparation for the next frame
+	# Tøm streamen for å klargjøre for neste frame
 	rawCapture.truncate(0)
  
 	if key == ord("q"):

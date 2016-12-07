@@ -25,6 +25,8 @@ msg ['Subject'] = "Bevegelse oppdaget - alarm"
 #Define variable for email text
 body = "Bevegelsessensoren har oppdaget anomaliteter."
 msg.attach(MIMEText(body, 'plain'))
+#Nytt segment for å legge til bilde i e-post notifikasjon i sammenheng med biometrisk
+# løsning i IS-308
 img_data = open(ImgFileName, 'rb').read()
 image = MIMEImage(img_data, name=os.path.basename(ImgFileName))
 msg.attach(image)

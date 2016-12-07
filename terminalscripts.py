@@ -28,12 +28,14 @@ muted = ""
 def spStart():
 	if muted:
 		print "The buzzer is inactive/muted in this session"
+		#Ny sub-process som starter kamerascript for IS-308
 		extProc = sp.Popen(['python','/home/pi/OSecurity/camera.py'])
 		status = sp.Popen.poll(extProc)
 		
 	else:
 		extProc = sp.Popen(['python','/home/pi/OSecurity/buzzermodule.py'])
 		status = sp.Popen.poll(extProc) # status none
+		#Ny sub-process som starter kamerascript for IS-308
 		extProc2 = sp.Popen(['python','/home/pi/OSecurity/camera.py'])
 		status2 = sp.Popen.poll(extProc2) 
 		print "Buzzer has been activated!"
