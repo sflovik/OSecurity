@@ -7,6 +7,10 @@ import os
 import RPi.GPIO as GPIO
 import email.mime.base
 import time
+import threading
+import systemThread
+import multiprocessing
+import psutil
 from time import sleep
 
 GPIO.setmode(GPIO.BCM)
@@ -14,6 +18,28 @@ PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
 action = ""
 
+processID = 1
+pid = os.getpid()
+#print(str(pid)) returns 4375
+
+
+
+
+class myThread (multiprocessing.Process):
+    def __init__(self, processID, name):
+        multiprocessing.Process.__init__(self)
+        self.processID = processID
+        self.name = name
+    def run(self):
+        print "Starting " + self.name
+        global processID
+        processID += 1
+        systemActive()
+
+def killThread():
+        activeThread.terminate()
+
+activeThread = myThread(processID, "System Active Thread")
 
 mqtt_client = mqtt.Client(client_id="osecpi", clean_session=True)
 def writelog():
@@ -95,16 +121,33 @@ def on_message (mqttc, obj, msg):
     
     
     if message == "y":
+        print(processID)
         print("arming")
         action = "armed"
         mqtt_client.publish("/osecurity/fromterminal", action)
         #TODO start sub-process for aktivering
+        #extProc = sp.Popen(['python','/home/pi/OSecurity/pahoTest.py'])
+        #extProc.systemActive() --> AttributeError: 'Popen' object has no attribute 'systemActive'
+        #if processID == 2:
+        #    activeThread = myThread(processID, "System Active Thread")
+        #    print("starting second process with processID: " + str(processID))
+        #    activeThread.start()
+        #elif processID > 1:
+        #    activeThread = myThread(processID, "System Active Thread")
+        #    print("starting third process with processID: " + str(processID))
+        global activeThread
+        activeThread = myThread(processID, "System Active Thread")
+        activeThread.start()
+
          
     elif message == "n":
         action = "disarmed"
+        print(str(pid))
         mqtt_client.publish("/osecurity/fromterminal", action)
         print("disarming")
         #TODO stopp sub-process
+        #extProc.terminate()
+        activeThread.terminate()
         
 def on_publish(mosq, obj, mid):
     print("mid: " + str(mid))
