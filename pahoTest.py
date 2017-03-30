@@ -12,17 +12,72 @@ import systemThread
 import multiprocessing
 import psutil
 from time import sleep
+from picamera import PiCamera
+import boto
+import boto3
+from boto.s3.key import Key
+from datetime import datetime
+from threading import Timer
+
 
 GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
 action = ""
+localtime = time.asctime (time.localtime(time.time()))
+
+
+
+
+
+client = boto3.client('sns', region_name='eu-west-1')
+s3 = boto.connect_s3()
 
 processID = 1
+processID2 = 1
+processID3 = 1
+
 pid = os.getpid()
 #print(str(pid)) returns 4375
 
-
+class TaskThread(multiprocessing.Process):
+    """Thread that executes a task every N seconds"""
+    
+    def __init__(self, processID, name):
+        multiprocessing.Process.__init__(self)
+        self.processID = processID3
+        self.name = name
+        self._finished = threading.Event()
+        self._interval = 15.0
+    
+    def setInterval(self, interval):
+        """Set the number of seconds we sleep between executing our task"""
+        self._interval = interval
+    
+    def shutdown(self):
+        """Stop this thread"""
+        self._finished.set()
+    
+    def run(self):
+        while 1:
+            if self._finished.isSet(): return
+            self.task()
+            
+            # sleep for interval or until shutdown
+            self._finished.wait(self._interval)
+    
+    def task(self):
+        snapshot()
+        boto.set_stream_logger('boto')
+        bucket = s3.get_bucket('latest-snapshot', validate=False)
+        exists = s3.lookup('latest-snapshot')
+        for bucket in s3:
+           for key in bucket:
+               print(key.name)
+        key = s3.get_bucket('latest-snapshot').get_key('ic_menu.png')
+        key.set_contents_from_filename('/home/pi/OSecuritySnapshots/latestSnapshot.png')
+    #key.get_contents_to_filename('/home/pi/s3download.jpg')
+        pass
 
 
 class myThread (multiprocessing.Process):
@@ -37,10 +92,14 @@ class myThread (multiprocessing.Process):
         systemActive()
 
 def killThread():
-        activeThread.terminate()
-
+        activeThread.terminate() 
+def killS3Thread():
+        s3Thread.terminate()
+        
 activeThread = myThread(processID, "System Active Thread")
-
+s3Thread = myThread(processID2, "S3 thread active")
+timeThread = TaskThread(processID3, "Time thread active")
+    
 mqtt_client = mqtt.Client(client_id="osecpi", clean_session=True)
 def writelog():
 	localtime = time.asctime (time.localtime(time.time()))
@@ -48,7 +107,32 @@ def writelog():
 	text_file.write("%s , ble bevegelse oppdaget av PIR detektor og e-post notifikasjon sendt" "\n" "\n" % localtime)
 	text_file.close()
 
+def snapshot():
+    if not os.path.exists('/home/pi/OSecuritySnapshots'):
+        os.makedirs('/home/pi/OSecuritySnapshots')
+    camera = PiCamera()
+    camera.rotation = -90
+    camera.start_preview()
+    sleep (3)
+    camera.capture('/home/pi/OSecuritySnapshots/latestSnapshot.png')
+    camera.stop_preview()
+    camera.close()
 
+def camera():
+    if not os.path.exists('/home/pi/OSecurityNotifications'):
+        os.makedirs('/home/pi/OSecurityNotifications')
+    camera = PiCamera()
+    camera.rotation = -90
+    localtime = time.asctime (time.localtime(time.time()))
+    
+    camera.start_preview()
+    sleep (3)
+    camera.start_recording('/home/pi/OSecurityNotifications/%s.h264' % localtime)
+    sleep(10)
+    camera.stop_recording()
+    camera.capture('/home/pi/OSecurityNotifications/%s.png' % localtime)
+    camera.stop_preview()
+    camera.close()
 
 #Function to mail an activity log, called on system disarm
 def mailactlog():
@@ -85,15 +169,37 @@ def mailactlog():
 	text = msg.as_string()
 	server.sendmail(fromaddr, toaddr, text)
 	server.quit()
-
-
+	
+def S3Test():
+    boto.set_stream_logger('boto')
+    bucket = s3.get_bucket('latest-snapshot', validate=False)
+    exists = s3.lookup('latest-snapshot')
+    for bucket in s3:
+       for key in bucket:
+           print(key.name)
+    
+    key = s3.get_bucket('latest-snapshot').get_key('ic_menu.png')
+    key.set_contents_from_filename('/home/pi/OSecuritySnapshots/latestSnapshot.png')
+    #key.get_contents_to_filename('/home/pi/s3download.jpg')
+   
+    
+def timedTask():
+    global s3Thread
+    s3Thread = myThread(processID2, "S3 thread active")
+    s3Thread.start()
+    S3Test()
+    sleep(5)
+    killS3Thread()
+    
 def MOTION (PIR_PIN):
     print ("Motion detected by PIR. E-mail notification sent")
+    camera()
     writelog()
-    #spStart()
-    sleep(15)
+    camera()
+    sleep(5)
+ 
 
-#Function systemActive() to be called on script startup, listens for gpio-input until KeyboardInterrupt occurs
+
 def systemActive():
         try:
                 GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=MOTION)
@@ -105,36 +211,22 @@ def systemActive():
                  print (" Quit")
                  print ("Disarming OSecurity - sending activity log to registered email")
                  GPIO.cleanup()
-                        #mailactlog()
+                 #mailactlog()
 
 
 
-#Dette er subscribe client 
-#Den skal"subcribe" til en topic paa MQTT broker, AWS
-#App skal altsaa oppdatere broker med en beskjed paa en topic
-#Videre skal subcriberen paa raspberry utfore handling basert paa payload fra broker
+
 
 def on_message (mqttc, obj, msg):
     global message
-    #print(msg.topic + " " + str(msg.qos) + "  " + str(msg.payload))
     message = msg.payload.decode()
     
     
     if message == "y":
-        print(processID)
         print("arming")
         action = "armed"
         mqtt_client.publish("/osecurity/fromterminal", action)
-        #TODO start sub-process for aktivering
-        #extProc = sp.Popen(['python','/home/pi/OSecurity/pahoTest.py'])
-        #extProc.systemActive() --> AttributeError: 'Popen' object has no attribute 'systemActive'
-        #if processID == 2:
-        #    activeThread = myThread(processID, "System Active Thread")
-        #    print("starting second process with processID: " + str(processID))
-        #    activeThread.start()
-        #elif processID > 1:
-        #    activeThread = myThread(processID, "System Active Thread")
-        #    print("starting third process with processID: " + str(processID))
+
         global activeThread
         activeThread = myThread(processID, "System Active Thread")
         activeThread.start()
@@ -142,16 +234,13 @@ def on_message (mqttc, obj, msg):
          
     elif message == "n":
         action = "disarmed"
-        print(str(pid))
         mqtt_client.publish("/osecurity/fromterminal", action)
         print("disarming")
-        #TODO stopp sub-process
-        #extProc.terminate()
         activeThread.terminate()
         
 def on_publish(mosq, obj, mid):
     print("mid: " + str(mid))
-    mqttc.publish("/osecurity/fromtermianl", action)
+    mqttc.publish("/osecurity/fromterminal", action)
     
 def on_connect (mqttc, obj, flags, rc):
     mqttc.subscribe("/osecurity/fromapp", 0)
@@ -168,6 +257,12 @@ mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
 
 
+global timeThread
+timeThread = TaskThread(processID3, "S3 thread/proocess active")
+timeThread.start()
+         
+
+
 mqtt_client.tls_set("/home/pi/Downloads/AWS/root-CA.crt",certfile="/home/pi/Downloads/AWS/OSEC-TERMINAL.cert.pem",
                     keyfile="/home/pi/Downloads/AWS/OSEC-TERMINAL.private.key",
                     tls_version=ssl.PROTOCOL_TLSv1_2,ciphers=None)
@@ -177,6 +272,8 @@ mqtt_client.connect("a3enni6esrlrke.iot.eu-west-1.amazonaws.com", port=8883)
 
 
 mqtt_client.loop_forever()
+
+
 
 
 
