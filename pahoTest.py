@@ -18,6 +18,29 @@ import boto3
 from boto.s3.key import Key
 from datetime import datetime
 from threading import Timer
+from pyfcm import FCMNotification
+
+
+# Send to single device.
+push_service = FCMNotification(api_key="AIzaSyCBCGdrJdTyumOoXxbogw0fsWRaSAhxp08")
+
+registration_id = "<device registration_id>"
+message_title = "OSecurity: Movement detected"
+notificationTime = ""
+message_body = "Hi john, your customized news for today is ready"
+result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
+
+
+
+
+# OR initialize with proxies
+
+#proxy_dict = {
+#          "http"  : "http://127.0.0.1",
+#          "https" : "http://127.0.0.1",
+#        }
+#push_service = FCMNotification(api_key="<api-key>", proxy_dict=proxy_dict)
+
 
 
 GPIO.setmode(GPIO.BCM)
@@ -25,6 +48,7 @@ PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
 action = ""
 localtime = time.asctime (time.localtime(time.time()))
+
 
 
 
@@ -190,9 +214,15 @@ def timedTask():
     S3Test()
     sleep(5)
     killS3Thread()
+
+def addTimeToNotification():
+    global notificationTime
+    notificationTime = time.asctime (time.localtime(time.time()))
     
 def MOTION (PIR_PIN):
     print ("Motion detected by PIR. E-mail notification sent")
+    addTimeToNotification()
+    print (notificationTime)
     camera()
     writelog()
     camera()
