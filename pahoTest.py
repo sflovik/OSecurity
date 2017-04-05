@@ -24,19 +24,6 @@ import string
 
 
 
-
-
-
-# OR initialize with proxies
-
-#proxy_dict = {
-#          "http"  : "http://127.0.0.1",
-#          "https" : "http://127.0.0.1",
-#        }
-#push_service = FCMNotification(api_key="<api-key>", proxy_dict=proxy_dict)
-
-
-
 GPIO.setmode(GPIO.BCM)
 PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
@@ -46,7 +33,7 @@ localtime = time.asctime (time.localtime(time.time()))
 
 
 
-registration = "meh"
+registration = "m"
 
 
 client = boto3.client('sns', region_name='eu-west-1')
@@ -269,9 +256,10 @@ def on_message (mqttc, obj, msg):
         activeThread.terminate()
 
     else:
-         registration = registration.replace("meh", message)
+         registration = str(registration).replace("m", message)
          print ("Entered else block")
          print registration
+         
 
 
    
