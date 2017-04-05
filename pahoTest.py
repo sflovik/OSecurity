@@ -19,16 +19,10 @@ from boto.s3.key import Key
 from datetime import datetime
 from threading import Timer
 from pyfcm import FCMNotification
+import string
 
 
-# Send to single device.
-push_service = FCMNotification(api_key="AIzaSyCBCGdrJdTyumOoXxbogw0fsWRaSAhxp08")
 
-registration_id = "<device registration_id>"
-message_title = "OSecurity: Movement detected"
-notificationTime = ""
-message_body = "Hi john, your customized news for today is ready"
-result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
 
 
 
@@ -52,6 +46,7 @@ localtime = time.asctime (time.localtime(time.time()))
 
 
 
+registration = "meh"
 
 
 client = boto3.client('sns', region_name='eu-west-1')
@@ -91,15 +86,15 @@ class TaskThread(multiprocessing.Process):
             self._finished.wait(self._interval)
     
     def task(self):
-        snapshot()
-        boto.set_stream_logger('boto')
-        bucket = s3.get_bucket('latest-snapshot', validate=False)
-        exists = s3.lookup('latest-snapshot')
-        for bucket in s3:
-           for key in bucket:
-               print(key.name)
-        key = s3.get_bucket('latest-snapshot').get_key('ic_menu.png')
-        key.set_contents_from_filename('/home/pi/OSecuritySnapshots/latestSnapshot.png')
+        #snapshot()
+        #boto.set_stream_logger('boto')
+        #bucket = s3.get_bucket('latest-snapshot', validate=False)
+        #exists = s3.lookup('latest-snapshot')
+        #for bucket in s3:
+           #for key in bucket:
+               #print(key.name)
+        #key = s3.get_bucket('latest-snapshot').get_key('ic_menu.png')
+        #key.set_contents_from_filename('/home/pi/OSecuritySnapshots/latestSnapshot.png')
     #key.get_contents_to_filename('/home/pi/s3download.jpg')
         pass
 
@@ -223,9 +218,14 @@ def MOTION (PIR_PIN):
     print ("Motion detected by PIR. E-mail notification sent")
     addTimeToNotification()
     print (notificationTime)
-    camera()
+    #camera()
+    #push_service = FCMNotification(api_key="AIzaSyBxUGqEvrIxL0-5-wzfhr2EjmHXdQe3vcA")
+    #message_title = "Varsel"
+    #message_body = "Bevegelse oppdaget av bevegelsessensor"
+    #result = push_service.notify_single_device(registration_id=registration, message_title=message_title, message_body=message_body)
+    #print result
+    print registration
     writelog()
-    camera()
     sleep(5)
  
 
@@ -248,7 +248,7 @@ def systemActive():
 
 
 def on_message (mqttc, obj, msg):
-    global message
+    global message, registration
     message = msg.payload.decode()
     
     
@@ -267,6 +267,16 @@ def on_message (mqttc, obj, msg):
         mqtt_client.publish("/osecurity/fromterminal", action)
         print("disarming")
         activeThread.terminate()
+
+    else:
+         registration = registration.replace("meh", message)
+         print ("Entered else block")
+         print registration
+
+
+   
+        
+        
         
 def on_publish(mosq, obj, mid):
     print("mid: " + str(mid))
@@ -274,13 +284,14 @@ def on_publish(mosq, obj, mid):
     
 def on_connect (mqttc, obj, flags, rc):
     mqttc.subscribe("/osecurity/fromapp", 0)
+    mqttc.subscribe("/osecurity/firebase", 0)
     if rc==0:
         print ("HALLA, successful")
         
     
 def on_subscribe (mqttc, obj, mid, granted_qos):
     print ("Subscribed: " + str(mid) + " " + str(granted_qos))
-    mqtt_client.publish ("/osecurity/fromterminal", "Terminal er online")
+    mqtt_client.publish ("/osecurity/fromterminal", "disarmed")
 
 mqtt_client.on_subscribe = on_subscribe    
 mqtt_client.on_connect = on_connect
