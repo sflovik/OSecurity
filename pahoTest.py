@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import paho.mqtt.client as mqtt
 import ssl
@@ -22,6 +23,26 @@ from pyfcm import FCMNotification
 import string
 
 
+#Brukerhistorie 5, idéer om potensiell løsning
+#EC2 instanser (streaming server) som Amazon CloudFront bruker
+#  koster penger per time / per år som ikke er en god løsning under
+#  bachelorprosjektet.
+
+# Alternativ:
+# 1. Sett opp en egen VPN på Raspberry Pi i python
+# 2. Stream IP-video over VPN tunnel
+# 3. Siden app og terminal har kommunikasjon over MQTT, bruk en unik
+#    identifikator, f.eks. ved å si at kun en gitt unik Firebase-ID
+#    kan se / trigge denne streamen.
+#       1. Send Firebase token over MQTT fra app
+#       2. if MQTT on messasage = terminal firebase token
+#       3.      // Kjør kodesnutt som starter stream over IP
+#       4.      // Send stream IP over MQTT tilbake til app
+#       5.      // Start stream i app med IP som kommer over MQTT.
+#       6. if MQTT on message = "stop requested"
+#       7.      // Terminer stream
+#       8.      // Slett eventuell lokal cached data e.l.
+# 4. "Great success!" - Borat
 
 
 GPIO.setmode(GPIO.BCM)
@@ -206,13 +227,13 @@ def MOTION (PIR_PIN):
     addTimeToNotification()
     print (notificationTime)
     #camera()
-    #push_service = FCMNotification(api_key="AIzaSyBxUGqEvrIxL0-5-wzfhr2EjmHXdQe3vcA")
-    #message_title = "Varsel"
-    #message_body = "Bevegelse oppdaget av bevegelsessensor"
-    #result = push_service.notify_single_device(registration_id=registration, message_title=message_title, message_body=message_body)
-    #print result
-    print registration
-    writelog()
+    push_service = FCMNotification(api_key="AIzaSyBxUGqEvrIxL0-5-wzfhr2EjmHXdQe3vcA")
+    message_title = "Varsel"
+    message_body = "Bevegelse oppdaget av bevegelsessensor"
+    result = push_service.notify_single_device(registration_id=registration, message_title=message_title, message_body=message_body)
+    print result
+    #print registration
+    #writelog()
     sleep(5)
  
 
@@ -238,7 +259,7 @@ def on_message (mqttc, obj, msg):
     global message, registration
     message = msg.payload.decode()
     
-    
+    #Om MQTT-beskjed fra app er y, aktiver armert thread
     if message == "y":
         print("arming")
         action = "armed"
@@ -248,13 +269,24 @@ def on_message (mqttc, obj, msg):
         activeThread = myThread(processID, "System Active Thread")
         activeThread.start()
 
-         
+    #Om MQTT-beskjed fra app er n, terminer armert thread     
     elif message == "n":
         action = "disarmed"
         mqtt_client.publish("/osecurity/fromterminal", action)
         print("disarming")
         activeThread.terminate()
-
+    #Om MQTT-beskjed fra app er check, så kontrollerer terminal om armert thread er aktiv (for å gi state
+        #feedback til app)
+    elif message == "check":
+        if activeThread.is_alive():
+            action = "armed"
+            mqtt_client.publish("/osecurity/fromterminal", action)
+        else:
+            action = "disarmed"
+            mqtt_client.publish("/osecurity/fromterminal", action)
+             
+        
+    #Siden Denne ID er unik så kan den ikke sammenlignes til en fast verdi, så kjører bare i en else-block
     else:
          registration = str(registration).replace("m", message)
          print ("Entered else block")
@@ -269,17 +301,24 @@ def on_message (mqttc, obj, msg):
 def on_publish(mosq, obj, mid):
     print("mid: " + str(mid))
     mqttc.publish("/osecurity/fromterminal", action)
-    
+
+    #Subscriber til topic som app sender til, og topic hvor den får firebase ID til push-notification
 def on_connect (mqttc, obj, flags, rc):
     mqttc.subscribe("/osecurity/fromapp", 0)
     mqttc.subscribe("/osecurity/firebase", 0)
+    
     if rc==0:
         print ("HALLA, successful")
         
     
 def on_subscribe (mqttc, obj, mid, granted_qos):
     print ("Subscribed: " + str(mid) + " " + str(granted_qos))
-    mqtt_client.publish ("/osecurity/fromterminal", "disarmed")
+    #Sjekker om terminalen er aktivert ved å sjekke state på thread
+    if activeThread.is_alive():
+        mqtt_client.publish ("/osecurity/fromterminal", "armed")
+    else:
+        mqtt_client.publish ("/osecurity/fromterminal", "disarmed")
+    
 
 mqtt_client.on_subscribe = on_subscribe    
 mqtt_client.on_connect = on_connect
@@ -291,11 +330,12 @@ timeThread = TaskThread(processID3, "S3 thread/proocess active")
 timeThread.start()
          
 
-
+#setter TLS med unike lokale nøkler for enheten fra AWS. 
 mqtt_client.tls_set("/home/pi/Downloads/AWS/root-CA.crt",certfile="/home/pi/Downloads/AWS/OSEC-TERMINAL.cert.pem",
                     keyfile="/home/pi/Downloads/AWS/OSEC-TERMINAL.private.key",
                     tls_version=ssl.PROTOCOL_TLSv1_2,ciphers=None)
 
+#Kobler til vaart unike IoT endpoint, port default
 mqtt_client.connect("a3enni6esrlrke.iot.eu-west-1.amazonaws.com", port=8883)
 
 
