@@ -94,16 +94,15 @@ class TaskThread(multiprocessing.Process):
             self._finished.wait(self._interval)
     
     def task(self):
-        #snapshot()
-        #boto.set_stream_logger('boto')
-        #bucket = s3.get_bucket('latest-snapshot', validate=False)
-        #exists = s3.lookup('latest-snapshot')
-        #for bucket in s3:
-           #for key in bucket:
-               #print(key.name)
-        #key = s3.get_bucket('latest-snapshot').get_key('ic_menu.png')
-        #key.set_contents_from_filename('/home/pi/OSecuritySnapshots/latestSnapshot.png')
-    #key.get_contents_to_filename('/home/pi/s3download.jpg')
+        snapshot()
+        boto.set_stream_logger('boto')
+        bucket = s3.get_bucket('latest-snapshot', validate=False)
+        exists = s3.lookup('latest-snapshot')
+        for bucket in s3:
+           for key in bucket:
+               print(key.name)
+        key = s3.get_bucket('latest-snapshot').get_key('knapp.JPG')
+        key.set_contents_from_filename('/home/pi/OSecuritySnapshots/latestSnapshot.JPG')
         pass
 
 
@@ -141,7 +140,7 @@ def snapshot():
     camera.rotation = -90
     camera.start_preview()
     sleep (3)
-    camera.capture('/home/pi/OSecuritySnapshots/latestSnapshot.png')
+    camera.capture('/home/pi/OSecuritySnapshots/latestSnapshot.JPG')
     camera.stop_preview()
     camera.close()
 
@@ -157,7 +156,7 @@ def camera():
     camera.start_recording('/home/pi/OSecurityNotifications/%s.h264' % localtime)
     sleep(10)
     camera.stop_recording()
-    camera.capture('/home/pi/OSecurityNotifications/%s.png' % localtime)
+    camera.capture('/home/pi/OSecurityNotifications/%s.JPG' % localtime)
     camera.stop_preview()
     camera.close()
 
@@ -205,8 +204,8 @@ def S3Test():
        for key in bucket:
            print(key.name)
     
-    key = s3.get_bucket('latest-snapshot').get_key('ic_menu.png')
-    key.set_contents_from_filename('/home/pi/OSecuritySnapshots/latestSnapshot.png')
+    key = s3.get_bucket('latest-snapshot').get_key('knapp.JPG')
+    key.set_contents_from_filename('/home/pi/OSecuritySnapshots/latestSnapshot.JPG')
     #key.get_contents_to_filename('/home/pi/s3download.jpg')
    
     
@@ -226,7 +225,7 @@ def MOTION (PIR_PIN):
     print ("Motion detected by PIR. E-mail notification sent")
     addTimeToNotification()
     print (notificationTime)
-    #camera()
+    camera()
     push_service = FCMNotification(api_key="AIzaSyBxUGqEvrIxL0-5-wzfhr2EjmHXdQe3vcA")
     message_title = "Varsel"
     message_body = "Bevegelse oppdaget av bevegelsessensor"
