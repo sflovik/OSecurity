@@ -283,6 +283,11 @@ def on_message (mqttc, obj, msg):
         else:
             action = "disarmed"
             mqtt_client.publish("/osecurity/fromterminal", action)
+    #elif message == "stream"
+        #Start kamera
+        #Start stream + server
+        #Send http/rtsp link via mqtt
+        #mqtt_client.publish("/osecurity)
              
         
     #Siden Denne ID er unik så kan den ikke sammenlignes til en fast verdi, så kjører bare i en else-block
